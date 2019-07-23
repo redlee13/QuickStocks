@@ -9,4 +9,9 @@
     <string name="lowest">Low</string>
     <string name="previous_close">Previous Close</string>
     <string name="company_details">Company Details</string>
+    <string name="total_deals">Transactions</string>
+    <string name="deals_amount">Transaction volume</string>
+
+
+    <string name="failed">Failed to connect</string>
 </resources>

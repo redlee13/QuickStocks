@@ -56,8 +56,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, DetailsActivity.class);
-                    intent.putExtra(Intent.EXTRA_TEXT, mList.get(getAdapterPosition()).getCompanyUrl());
-                    intent.putExtra(Intent.EXTRA_TITLE, mList.get(getAdapterPosition()).getCompanyName());
+                    intent.putExtra(Intent.EXTRA_TEXT, mList.get(getAdapterPosition()));
                     mContext.startActivity(intent);
                 }
             });

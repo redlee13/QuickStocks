@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
                     modelList.add(new MainModel(link.text(), link.attr("href")));
                 }
 
-
-                modelList.add(new MainModel("this", "test"));
                 mAdapter = new MainRecyclerAdapter(modelList, MainActivity.this);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
                 mRecyclerView.setLayoutManager(layoutManager);
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<MainModel>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFailure: " + t);
             }
         });

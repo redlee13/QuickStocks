@@ -1,15 +1,21 @@
 package com.example.android.quickstocks.UI;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.quickstocks.Data.GetData;
+import com.example.android.quickstocks.Data.MainDatabase;
+import com.example.android.quickstocks.Data.MainHelper;
 import com.example.android.quickstocks.Data.RetrofitInstance;
 import com.example.android.quickstocks.DetailsModel;
+import com.example.android.quickstocks.MainModel;
 import com.example.android.quickstocks.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -27,6 +33,9 @@ public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = "DetailsActivity";
     String fullName;
     String companyUrl;
+    MainHelper helper;
+    boolean clicked =false;
+    private MainModel mMainModel;
 
     @BindView(R.id.details_ac_name)
     TextView tvName;
@@ -46,6 +55,12 @@ public class DetailsActivity extends AppCompatActivity {
     TextView tvOpen;
     @BindView(R.id.details_full_name)
     TextView tvFullName;
+    @BindView(R.id.total_deals)
+    TextView tvTotalDeals;
+    @BindView(R.id.transaction_volume)
+    TextView tvDealsAmount;
+    @BindView(R.id.fav_button)
+    FloatingActionButton favoriteFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +68,11 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
 
-        companyUrl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
-        fullName = getIntent().getStringExtra(Intent.EXTRA_TITLE);
+        helper = new MainHelper(this);
+
+        mMainModel = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+        companyUrl = mMainModel.getCompanyUrl();
+        fullName = mMainModel.getCompanyName();
 
         GetData data = RetrofitInstance.getRetrofit().create(GetData.class);
         Call<List<DetailsModel>> call = data.getCompanyUrl(companyUrl);
@@ -74,8 +92,8 @@ public class DetailsActivity extends AppCompatActivity {
                 Elements latestPrice = document.select("div[rid]");
                 tvPrice.setText(latestPrice.text());
 
-                // Last Trade
-                Elements lastTrade = document.select("td[rid=CLOSEVALUE]");
+//                // Last Trade
+//                Elements lastTrade = document.select("td[rid=CLOSEVALUE]");
 
 
                 // Change
@@ -116,7 +134,22 @@ public class DetailsActivity extends AppCompatActivity {
                 Elements previousClose = document.select("td[rid=PREVIOUSCLOSEVALUE]");
                 tvLastClose.setText(previousClose.text());
 
+                // Total Deals
+                Elements totalDeals = document.select("td[rid=CONTRACTCOUNT]");
+                tvTotalDeals.setText(totalDeals.text());
 
+                // Deals Amount
+                Elements dealsAmount = document.select("td[rid=VOLUME]");
+                tvDealsAmount.setText(dealsAmount.text());
+
+
+                favoriteFab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new CompanyAsyncTask().execute(mMainModel);
+                        clicked = true;
+                    }
+                });
             }
 
             @Override
@@ -125,10 +158,46 @@ public class DetailsActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: " + t);
             }
         });
+
+    }
+
+    private void markFavorite(MainModel model) {
+        helper.insert(model);
+    }
+
+    private void unmarkFavorite(MainModel model) {
+        helper.delete(model);
     }
 
     private static String removeUnwantedChars(String str, int start, int end) {
         return str.substring(start, str.length() - end);
+    }
+
+    private class CompanyAsyncTask extends AsyncTask<MainModel, Void, MainModel>{
+        @Override
+        protected MainModel doInBackground(MainModel... mainModels) {
+            MainDatabase database = MainDatabase.getInstance(DetailsActivity.this);
+            return database.mainDao().getSingleCompany(mainModels[0].getId());
+        }
+
+        @Override
+        protected void onPostExecute(MainModel mainModel) {
+            if (clicked) {
+                if (mainModel != null){
+                    unmarkFavorite(mMainModel);
+                    favoriteFab.setImageResource(R.drawable.ic_baseline_favorite_border_24px);
+                } else {
+                    markFavorite(mMainModel);
+                    favoriteFab.setImageResource(R.drawable.ic_baseline_favorite_24px);
+                }
+            } else {
+                if (mainModel != null){
+                    favoriteFab.setImageResource(R.drawable.ic_baseline_favorite_24px);
+                } else {
+                    favoriteFab.setImageResource(R.drawable.ic_baseline_favorite_border_24px);
+                }
+            }
+        }
     }
 
 

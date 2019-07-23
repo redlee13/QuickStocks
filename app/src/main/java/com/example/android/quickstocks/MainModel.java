@@ -3,16 +3,26 @@ package com.example.android.quickstocks;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class MainModel implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String companyName;
-
     private String companyUrl;
 
 
     public MainModel(String companyName, String companyUrl) {
         this.companyName = companyName;
         this.companyUrl = companyUrl;
+    }
+
+    @Ignore
+    public MainModel() {
     }
 
     protected MainModel(Parcel in) {
@@ -49,6 +59,13 @@ public class MainModel implements Parcelable {
     }
 
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     @Override
     public int describeContents() {
         return 0;
