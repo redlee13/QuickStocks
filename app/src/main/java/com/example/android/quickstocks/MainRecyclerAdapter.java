@@ -36,6 +36,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.companyName.setText(mList.get(position).getCompanyName());
         holder.companyUrl.setText(mList.get(position).getCompanyUrl());
+        mList.get(position).setId(position);
     }
 
     @Override

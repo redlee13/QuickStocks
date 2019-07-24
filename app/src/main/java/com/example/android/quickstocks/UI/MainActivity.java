@@ -1,43 +1,38 @@
 package com.example.android.quickstocks.UI;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-import com.example.android.quickstocks.Data.GetData;
-import com.example.android.quickstocks.Data.RetrofitInstance;
 import com.example.android.quickstocks.MainModel;
 import com.example.android.quickstocks.MainRecyclerAdapter;
 import com.example.android.quickstocks.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.example.android.quickstocks.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     @BindView(R.id.main_list_rv)
     RecyclerView mRecyclerView;
+
     private MainRecyclerAdapter mAdapter;
+    List<MainModel> modelList;
+    ViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,46 +42,45 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
         ButterKnife.bind(this);
 
-        GetData data = RetrofitInstance.getRetrofit().create(GetData.class);
-        Call<List<MainModel>> call = data.getTasi();
-        call.enqueue(new Callback<List<MainModel>>() {
-            @Override
-            public void onResponse(Call<List<MainModel>> call, Response<List<MainModel>> response) {
-                Document document = (Document) response.body();
+        modelList = new ArrayList<>();
 
-                Elements links = document.select("span > a[href]");
-                List<MainModel> modelList = new ArrayList<>();
-                for (Element link : links) {
-                    modelList.add(new MainModel(link.text(), link.attr("href")));
-                }
+        mViewModel = ViewModelProviders.of(this).get(ViewModel.class);
 
-                mAdapter = new MainRecyclerAdapter(modelList, MainActivity.this);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-                mRecyclerView.setLayoutManager(layoutManager);
-                mRecyclerView.setAdapter(mAdapter);
-            }
+        listLoader();
 
-            @Override
-            public void onFailure(Call<List<MainModel>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onFailure: " + t);
-            }
-        });
+        mAdapter = new MainRecyclerAdapter(modelList, MainActivity.this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
 
     }
 
+    private void listLoader(){
+        if (getSort().equals(getString(R.string.pref_fav))){
+            mViewModel.getLiveDate(true).observe(this, new Observer<List<MainModel>>() {
+                @Override
+                public void onChanged(List<MainModel> mainModels) {
+                    modelList.clear();
+                    if (mainModels != null){
+                        modelList.addAll(mainModels);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        } else {
+            mViewModel.getLiveDate(false).observe(this, new Observer<List<MainModel>>() {
+                @Override
+                public void onChanged(List<MainModel> mainModels) {
+                    modelList.clear();
+                    modelList.addAll(mainModels);
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -96,16 +90,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            startActivity(new Intent(this, SettingsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private String getSort() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString(getString(R.string.list_key), getString(R.string.pref_normal));
+    }
+
 }

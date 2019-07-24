@@ -10,26 +10,13 @@ import androidx.room.PrimaryKey;
 @Entity
 public class MainModel implements Parcelable {
 
+
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String companyName;
     private String companyUrl;
 
-
-    public MainModel(String companyName, String companyUrl) {
-        this.companyName = companyName;
-        this.companyUrl = companyUrl;
-    }
-
     @Ignore
-    public MainModel() {
-    }
-
-    protected MainModel(Parcel in) {
-        companyName = in.readString();
-        companyUrl = in.readString();
-    }
-
     public static final Creator<MainModel> CREATOR = new Creator<MainModel>() {
         @Override
         public MainModel createFromParcel(Parcel in) {
@@ -42,22 +29,25 @@ public class MainModel implements Parcelable {
         }
     };
 
-    public String getCompanyName() {
-        return this.companyName;
+
+    public MainModel(String companyName, String companyUrl) {
+        this.companyName = companyName;
+        this.companyUrl = companyUrl;
     }
 
-    public void setCompanyName(String value) {
-        this.companyName = value;
+
+    protected MainModel(Parcel in) {
+        companyName = in.readString();
+        companyUrl = in.readString();
+    }
+
+    public String getCompanyName() {
+        return this.companyName;
     }
 
     public String getCompanyUrl() {
         return this.companyUrl.substring(1);
     }
-
-    public void setCompanyUrl(String value) {
-        this.companyUrl = value;
-    }
-
 
     public int getId() {
         return id;
@@ -66,6 +56,8 @@ public class MainModel implements Parcelable {
     public void setId(int id) {
         this.id = id;
     }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -73,7 +65,7 @@ public class MainModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeValue(companyName);
-        parcel.writeValue(companyUrl);
+        parcel.writeString(companyName);
+        parcel.writeString(companyUrl);
     }
 }

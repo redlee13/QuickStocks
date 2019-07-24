@@ -18,5 +18,6 @@ public class RetrofitInstance {
         }
         return retrofit;
     }
+
 }
 

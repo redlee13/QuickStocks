@@ -74,6 +74,7 @@ public class DetailsActivity extends AppCompatActivity {
         companyUrl = mMainModel.getCompanyUrl();
         fullName = mMainModel.getCompanyName();
 
+        Log.d(TAG, "onCreate: " + mMainModel.getId());
         GetData data = RetrofitInstance.getRetrofit().create(GetData.class);
         Call<List<DetailsModel>> call = data.getCompanyUrl(companyUrl);
 
