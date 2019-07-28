@@ -38,7 +38,7 @@ public class DetailsFragment extends Fragment {
     private String fullName;
     private String companyUrl;
     private MainHelper helper;
-    private boolean clicked =false;
+    private boolean clicked = false;
     private MainModel mMainModel;
 
     @BindView(R.id.details_ac_name)
@@ -105,7 +105,7 @@ public class DetailsFragment extends Fragment {
 
                 // Company name
                 String name = document.title();
-                name = removeUnwantedChars(name,0,25).substring(0,name.indexOf("|")-1).trim();
+//                name = removeUnwantedChars(name,0,25).substring(0,name.indexOf("|")-1).trim();
                 tvFullName.setText(name);
                 tvName.setText(fullName);
 
@@ -200,7 +200,7 @@ public class DetailsFragment extends Fragment {
         @Override
         protected MainModel doInBackground(MainModel... mainModels) {
             MainDatabase database = MainDatabase.getInstance(getContext());
-            return database.mainDao().getSingleCompany(mainModels[0].getId());
+            return database.mainDao().getSingleCompany(mainModels[0].getCompanyName());
         }
 
         @Override

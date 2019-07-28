@@ -4,21 +4,23 @@ import com.example.android.quickstocks.MainModel;
 
 import java.util.List;
 
+import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 @androidx.room.Dao
 public interface MainDao {
 
-    @Insert
-    void insert(MainModel mainModel);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Long insert(MainModel mainModel);
 
-    @Query("DELETE FROM MainModel WHERE id = :id")
-    void delete(int id);
+    @Delete
+    void delete(MainModel mainModel);
 
     @Query("SELECT * FROM MainModel")
     List<MainModel> getAll();
 
-    @Query("SELECT * FROM MainModel WHERE id = :id")
-    MainModel getSingleCompany(int id);
+    @Query("SELECT * FROM MainModel WHERE companyName = :name")
+    MainModel getSingleCompany(String name);
 }

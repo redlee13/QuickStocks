@@ -6,7 +6,7 @@
     </string-array>
 
     <string-array name="values">
-        <item>default</item>
-        <item>favorites</item>
+        <item>@string/pref_normal</item>
+        <item>@string/pref_fav</item>
     </string-array>
 </resources>
