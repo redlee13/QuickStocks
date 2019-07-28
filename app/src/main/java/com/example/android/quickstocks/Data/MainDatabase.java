@@ -8,7 +8,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = MainModel.class, version = 1 , exportSchema = false)
+@Database(entities = MainModel.class, version = 3 , exportSchema = false)
 public abstract class MainDatabase extends RoomDatabase {
 
     private static MainDatabase instance;

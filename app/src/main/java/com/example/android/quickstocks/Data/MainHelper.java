@@ -31,7 +31,7 @@ public class MainHelper {
             if (setAsFavorite){
                 database.mainDao().insert(mainModels[0]);
             } else {
-                database.mainDao().delete(mainModels[0]);
+                database.mainDao().delete(mainModels[0].getId());
             }
             return null;
         }

@@ -2,6 +2,7 @@ package com.example.android.quickstocks;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.example.android.quickstocks.Data.GetData;
 import com.example.android.quickstocks.Data.MainDatabase;
@@ -55,7 +56,7 @@ public class ViewModel extends AndroidViewModel {
 
                 @Override
                 public void onFailure(Call<List<MainModel>> call, Throwable t) {
-
+                    Toast.makeText(getApplication(), "Failed to connect", Toast.LENGTH_SHORT).show();
                 }
             });
             return mLiveData;

@@ -1,13 +1,14 @@
 package com.example.android.quickstocks;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.quickstocks.UI.DetailsActivity;
+import com.example.android.quickstocks.UI.DetailsFragment;
+import com.example.android.quickstocks.UI.MainActivity;
 
 import java.util.List;
 
@@ -35,8 +36,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.companyName.setText(mList.get(position).getCompanyName());
-        holder.companyUrl.setText(mList.get(position).getCompanyUrl());
-        mList.get(position).setId(position);
     }
 
     @Override
@@ -47,8 +46,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.company_name)
         TextView companyName;
-        @BindView(R.id.company_price)
-        TextView companyUrl;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,11 +53,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, DetailsActivity.class);
-                    intent.putExtra(Intent.EXTRA_TEXT, mList.get(getAdapterPosition()));
-                    mContext.startActivity(intent);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("key1", mList.get(getAdapterPosition()));
+                    DetailsFragment detailsFragment = new DetailsFragment();
+                    detailsFragment.setArguments(bundle);
+                    fragmentLoader(detailsFragment);
                 }
             });
+        }
+    }
+
+    private void fragmentLoader(DetailsFragment detailsFragment){
+        if (mContext.getResources().getBoolean(R.bool.isTablet)){
+            ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.details_container, detailsFragment)
+                    .commit();
+        } else {
+            ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.list_container, detailsFragment)
+                    .commit();
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.example.android.quickstocks.UI;
 
-import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +24,21 @@ import org.jsoup.select.Elements;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailsActivity extends AppCompatActivity {
-    private static final String TAG = "DetailsActivity";
-    String fullName;
-    String companyUrl;
-    MainHelper helper;
-    boolean clicked =false;
+
+public class DetailsFragment extends Fragment {
+    private static final String TAG = "DetailsFragment";
+
+    private String fullName;
+    private String companyUrl;
+    private MainHelper helper;
+    private boolean clicked =false;
     private MainModel mMainModel;
 
     @BindView(R.id.details_ac_name)
@@ -62,15 +66,31 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.fav_button)
     FloatingActionButton favoriteFab;
 
+    Bundle mBundle;
+    private OnFragmentInteractionListener mListener;
+
+    public DetailsFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
-        ButterKnife.bind(this);
+        if (getArguments() != null) {
+            mMainModel = getArguments().getParcelable("key1");
+        }
+    }
 
-        helper = new MainHelper(this);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        ButterKnife.bind(this, view);
 
-        mMainModel = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+        helper = new MainHelper(getContext());
+
         companyUrl = mMainModel.getCompanyUrl();
         fullName = mMainModel.getCompanyName();
 
@@ -155,11 +175,13 @@ public class DetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DetailsModel>> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, "Failed to Connect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to Connect", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFailure: " + t);
             }
         });
 
+
+        return view;
     }
 
     private void markFavorite(MainModel model) {
@@ -174,10 +196,10 @@ public class DetailsActivity extends AppCompatActivity {
         return str.substring(start, str.length() - end);
     }
 
-    private class CompanyAsyncTask extends AsyncTask<MainModel, Void, MainModel>{
+    private class CompanyAsyncTask extends AsyncTask<MainModel, Void, MainModel> {
         @Override
         protected MainModel doInBackground(MainModel... mainModels) {
-            MainDatabase database = MainDatabase.getInstance(DetailsActivity.this);
+            MainDatabase database = MainDatabase.getInstance(getContext());
             return database.mainDao().getSingleCompany(mainModels[0].getId());
         }
 
@@ -202,4 +224,25 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
 }

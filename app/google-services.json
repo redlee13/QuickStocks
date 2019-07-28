@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "919712124294",
+    "firebase_url": "https://quickstocks-13ea6.firebaseio.com",
+    "project_id": "quickstocks-13ea6",
+    "storage_bucket": "quickstocks-13ea6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919712124294:android:522b4a0f74a71cc0",
+        "android_client_info": {
+          "package_name": "com.example.android.quickstocks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "919712124294-v5c5mr74olpeubof4s8hjvmgv7daasuc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwGwspbtN_es8XqtFC7BdJ_pNL6j1uAgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919712124294-v5c5mr74olpeubof4s8hjvmgv7daasuc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

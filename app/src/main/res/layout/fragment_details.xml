@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.DetailsActivity">
+    tools:context=".UI.DetailsFragment">
 
     <TextView
         android:id="@+id/details_ac_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,10 +22,9 @@
         android:id="@+id/details_full_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/details_ac_name"
         app:layout_constraintTop_toBottomOf="@+id/details_ac_name"
         tools:text="something small"/>
 
@@ -33,10 +32,9 @@
         android:id="@+id/last_price"
         android:layout_width="wrap_content"
         android:layout_height="17dp"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/details_full_name"
         app:layout_constraintTop_toBottomOf="@+id/details_full_name"
         tools:text="6666.6666"/>
 
