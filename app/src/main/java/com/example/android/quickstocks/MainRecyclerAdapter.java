@@ -13,6 +13,7 @@ import com.example.android.quickstocks.UI.MainActivity;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,11 +68,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         if (mContext.getResources().getBoolean(R.bool.isTablet)){
             ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .replace(R.id.details_container, detailsFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
         } else {
             ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
                     .addToBackStack(null)
                     .replace(R.id.list_container, detailsFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
         }
     }

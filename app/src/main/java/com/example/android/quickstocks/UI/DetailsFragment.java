@@ -36,7 +36,6 @@ public class DetailsFragment extends Fragment {
     private static final String TAG = "DetailsFragment";
 
     private String fullName;
-    private String companyUrl;
     private MainHelper helper;
     private boolean clicked = false;
     private MainModel mMainModel;
@@ -66,7 +65,6 @@ public class DetailsFragment extends Fragment {
     @BindView(R.id.fav_button)
     FloatingActionButton favoriteFab;
 
-    Bundle mBundle;
     private OnFragmentInteractionListener mListener;
 
     public DetailsFragment() {
@@ -91,7 +89,7 @@ public class DetailsFragment extends Fragment {
 
         helper = new MainHelper(getContext());
 
-        companyUrl = mMainModel.getCompanyUrl();
+        String companyUrl = mMainModel.getCompanyUrl();
         fullName = mMainModel.getCompanyName();
 
         Log.d(TAG, "onCreate: " + mMainModel.getId());
@@ -175,7 +173,7 @@ public class DetailsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<DetailsModel>> call, Throwable t) {
-                Toast.makeText(getContext(), "Failed to Connect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.failed), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFailure: " + t);
             }
         });

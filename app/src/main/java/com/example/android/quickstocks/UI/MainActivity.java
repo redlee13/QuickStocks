@@ -22,11 +22,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MainListFragment mainListFragment = new MainListFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.list_container, mainListFragment)
-                .commit();
+        if (savedInstanceState != null){
+            MainListFragment mainListFragment = new MainListFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.list_container, mainListFragment)
+                    .commit();
+        }
     }
 
 

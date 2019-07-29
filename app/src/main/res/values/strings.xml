@@ -19,6 +19,8 @@
     <string name="pref_normal">pref_normal</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="fab_add_remove">Add/Remove to Favorite</string>
+
     <string name="widget_text">Get Latest Market Price</string>
     <!-- Preference Titles -->
     <string name="settings_header">Default List</string>
