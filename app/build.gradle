@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias = 'MyKey'
+            keyPassword 'myKeyPassword'
+            storePassword 'myStorePassword'
+            storeFile file('C:\\Users\\Mohammad\\Documents\\GitHub\\QuickStocks\\key.jks')
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.android.quickstocks"
@@ -9,6 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
